@@ -1,4 +1,4 @@
-package me.ryand11.jtml;
+package me.ryandw11.jtml;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -16,7 +16,7 @@ import javafx.concurrent.Worker;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.web.WebView;
-import me.ryand11.jtml.exceptions.MethodNotFoundException;
+import me.ryandw11.jtml.exceptions.MethodNotFoundException;
 import netscape.javascript.JSObject;
 
 @SuppressWarnings("restriction")

@@ -1,4 +1,4 @@
-package me.ryand11.jtml.exceptions;
+package me.ryandw11.jtml.exceptions;
 
 public class MethodNotFoundException extends Exception {
 	
