@@ -9,14 +9,6 @@
 		<sourceDirectory>src</sourceDirectory>
 		<plugins>
 			<plugin>
-				<groupId>org.openjfx</groupId>
-				<artifactId>javafx-maven-plugin</artifactId>
-				<version>0.0.3</version>
-				<configuration>
-					<mainClass>me.ryand11.jtml.JTML</mainClass>
-				</configuration>
-			</plugin>
-			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.7.0</version>
 				<configuration>
