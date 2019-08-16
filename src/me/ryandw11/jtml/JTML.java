@@ -52,7 +52,7 @@ public class JTML {
                     }
                 }
             });
-			webView.getEngine().load("file:\\\\" + view);
+			webView.getEngine().load(view);
 			wv = webView;
 		});
 	}
@@ -85,7 +85,7 @@ public class JTML {
                     }
                 }
             });
-			webView.getEngine().load("file:\\\\" + view);
+			webView.getEngine().load(view);
 			wv = webView;
 		});
 	}
