@@ -99,7 +99,7 @@ public class JTML {
 	 * @param view The URL file path.
 	 * @param jstojava A map conatining the java to javascript functions.
 	 */
-	public JTML(JPanel fr, String view, Map<String, Object> jstojava, Class<?> callbackClass, String callbackMethod) {
+	public JTML(JPanel fr, String view, Map<String, Object> jstojava, Object callbackClass, String callbackMethod) {
 		JFXPanel jfxPanel = new JFXPanel();
 		fr.add(jfxPanel);
 		Platform.runLater(() -> {
@@ -126,8 +126,18 @@ public class JTML {
 		                public void changed(ObservableValue ov, State oldState, State newState) {
 		                    if (newState == State.SUCCEEDED) {
 		                        try {
-									callbackClass.getMethod(callbackMethod, null);
+									Method m = callbackClass.getClass().getMethod(callbackMethod, null);
+									m.invoke(callbackClass, null);
 								} catch (NoSuchMethodException | SecurityException e) {
+									e.printStackTrace();
+								} catch (IllegalAccessException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} catch (IllegalArgumentException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								} catch (InvocationTargetException e) {
+									// TODO Auto-generated catch block
 									e.printStackTrace();
 								}
 		                    }
