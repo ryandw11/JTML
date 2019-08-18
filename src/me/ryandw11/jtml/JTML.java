@@ -12,7 +12,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
+import javafx.concurrent.Worker.State;
 import javafx.embed.swing.JFXPanel;
 import javafx.scene.Scene;
 import javafx.scene.web.WebView;
@@ -85,6 +88,51 @@ public class JTML {
                     }
                 }
             });
+			webView.getEngine().load(view);
+			wv = webView;
+		});
+	}
+	
+	/**
+	 * Add a webpage view.
+	 * @param fr The JPanel you want it to be added to.
+	 * @param view The URL file path.
+	 * @param jstojava A map conatining the java to javascript functions.
+	 */
+	public JTML(JPanel fr, String view, Map<String, Object> jstojava, Class<?> callbackClass, String callbackMethod) {
+		JFXPanel jfxPanel = new JFXPanel();
+		fr.add(jfxPanel);
+		Platform.runLater(() -> {
+		    WebView webView = new WebView();
+		    jfxPanel.setScene(new Scene(webView));
+		    webView.getEngine().getLoadWorker()
+            .stateProperty()
+            .addListener((obs, old, neww) ->
+            {
+                if (neww == Worker.State.SUCCEEDED)
+                {
+                    JSObject bridge = (JSObject) webView.getEngine()
+                            .executeScript("window");
+                    Iterator<Entry<String, Object>> it = jstojava.entrySet().iterator();
+                    while (it.hasNext()) {
+                        Map.Entry<String, Object> pair = (Map.Entry<String, Object>)it.next();
+                        bridge.setMember(pair.getKey(), pair.getValue());
+                        it.remove();
+                    }
+                }
+            });
+		    webView.getEngine().getLoadWorker().stateProperty().addListener(
+		            new ChangeListener<State>() {
+		                public void changed(ObservableValue ov, State oldState, State newState) {
+		                    if (newState == State.SUCCEEDED) {
+		                        try {
+									callbackClass.getMethod(callbackMethod, null);
+								} catch (NoSuchMethodException | SecurityException e) {
+									e.printStackTrace();
+								}
+		                    }
+		                }
+		            });
 			webView.getEngine().load(view);
 			wv = webView;
 		});
