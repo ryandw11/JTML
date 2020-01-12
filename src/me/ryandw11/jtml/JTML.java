@@ -77,6 +77,52 @@ public class JTML {
 	}
 	
 	/**
+	 * Add a webpage view. The JPanel version should be used correctly.
+	 * @param fr
+	 * @param view The string path.
+	 * @param jstojava The map containing the java to javascript functions.
+	 * @param inst The instance of the object.
+	 */
+	public JTML(JFrame fr, String view, Map<String, Object> jstojava, Object inst) {
+		eventList = new ArrayList<>();
+		this.registerEvent(inst);
+		JFXPanel jfxPanel = new JFXPanel();
+		fr.add(jfxPanel);
+		Platform.runLater(() -> {
+		    WebView webView = new WebView();
+		    jfxPanel.setScene(new Scene(webView));
+		    webView.getEngine().getLoadWorker()
+            .stateProperty()
+            .addListener((obs, old, neww) ->
+            {
+                if (neww == Worker.State.SUCCEEDED)
+                {
+                    JSObject bridge = (JSObject) webView.getEngine()
+                            .executeScript("window");
+                    bridge.setMember("jtml", new JtmlJs());
+                    Iterator<Entry<String, Object>> it = jstojava.entrySet().iterator();
+                    while (it.hasNext()) {
+                        Map.Entry<String, Object> pair = (Map.Entry<String, Object>)it.next();
+                        bridge.setMember(pair.getKey(), pair.getValue());
+                        it.remove();
+                    }
+                }
+            });
+		    JTML currentInst = this;
+		    webView.getEngine().getLoadWorker().stateProperty().addListener(
+		            new ChangeListener<State>() {
+		                public void changed(ObservableValue ov, State oldState, State newState) {
+		                    if (newState == State.SUCCEEDED) {
+		                        fireEvent(PageLoad.class, new PageLoad(webView, currentInst));
+		                    }
+		                }
+		            });
+			webView.getEngine().load(view);
+			wv = webView;
+		});
+	}
+	
+	/**
 	 * Add a webpage view.
 	 * @param fr The JPanel you want it to be added to.
 	 * @param view The URL file path.
@@ -84,6 +130,52 @@ public class JTML {
 	 */
 	public JTML(JPanel fr, String view, Map<String, Object> jstojava) {
 		eventList = new ArrayList<>();
+		JFXPanel jfxPanel = new JFXPanel();
+		fr.add(jfxPanel);
+		Platform.runLater(() -> {
+		    WebView webView = new WebView();
+		    jfxPanel.setScene(new Scene(webView));
+		    webView.getEngine().getLoadWorker()
+            .stateProperty()
+            .addListener((obs, old, neww) ->
+            {
+                if (neww == Worker.State.SUCCEEDED)
+                {
+                    JSObject bridge = (JSObject) webView.getEngine()
+                            .executeScript("window");
+                    bridge.setMember("jtml", new JtmlJs());
+                    Iterator<Entry<String, Object>> it = jstojava.entrySet().iterator();
+                    while (it.hasNext()) {
+                        Map.Entry<String, Object> pair = (Map.Entry<String, Object>)it.next();
+                        bridge.setMember(pair.getKey(), pair.getValue());
+                        it.remove();
+                    }
+                }
+            });
+		    JTML currentInst = this;
+		    webView.getEngine().getLoadWorker().stateProperty().addListener(
+		            new ChangeListener<State>() {
+		                public void changed(ObservableValue ov, State oldState, State newState) {
+		                    if (newState == State.SUCCEEDED) {
+		                        fireEvent(PageLoad.class, new PageLoad(webView, currentInst));
+		                    }
+		                }
+		            });
+			webView.getEngine().load(view);
+			wv = webView;
+		});
+	}
+	
+	/**
+	 * Add a webpage view.
+	 * @param fr The JPanel you want it to be added to.
+	 * @param view The URL file path.
+	 * @param jstojava A map conatining the java to javascript functions.
+	 * @param inst The instance of the object.
+	 */
+	public JTML(JPanel fr, String view, Map<String, Object> jstojava, Object inst) {
+		eventList = new ArrayList<>();
+		this.registerEvent(inst);
 		JFXPanel jfxPanel = new JFXPanel();
 		fr.add(jfxPanel);
 		Platform.runLater(() -> {
